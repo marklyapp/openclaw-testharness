@@ -1,0 +1,22 @@
+{
+  "name": "openclaw-testharness",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "tsx src/index.ts",
+    "test:dev": "tsx src/index.ts --suite tests/dev-agent.yaml",
+    "test:reviewer": "tsx src/index.ts --suite tests/reviewer-agent.yaml",
+    "test:architect": "tsx src/index.ts --suite tests/architect-agent.yaml",
+    "test:all": "tsx src/index.ts --suite tests/"
+  },
+  "dependencies": {
+    "yaml": "^2.4.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0"
+  }
+}
