@@ -48,9 +48,7 @@ The harness auto-detects gateway config from `~/.openclaw/openclaw.json` or `~/.
 ### npm scripts
 
 ```bash
-npm test              # Run all tests
-npm run test:dev      # Dev agent only
-npm run test:reviewer # Reviewer agent only
+npm test              # Run example tests in tests/
 npm run test:all      # All suites in tests/
 ```
 
@@ -129,9 +127,7 @@ src/
   reporter.ts       Console + JSON reporter
   types.ts          Shared TypeScript types
 tests/
-  dev-agent.yaml    Dev agent behavioral tests
-  reviewer-agent.yaml
-  architect-agent.yaml
+  example.yaml      Example test case (replace with your own)
 ```
 
 The harness imports `GatewayClient` from the globally installed `openclaw` package (`openclaw/plugin-sdk/gateway-runtime`) — the same client used by OpenClaw's own TUI. No reimplementation of the WebSocket protocol.

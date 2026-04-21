@@ -1,0 +1,7 @@
+# Example test case — replace with your own or point --suite at your workflow repo
+- name: "example - agent responds"
+  agent: "main"
+  prompt: "What is your role? Answer in one sentence."
+  timeout_ms: 60000
+  assert:
+    min_length: 10
