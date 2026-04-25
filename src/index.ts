@@ -6,7 +6,7 @@ import chalk from "chalk";
 import { TestClient } from "./client.js";
 import { loadTests } from "./loader.js";
 import { runSuite } from "./runner.js";
-import { printResult, printSummary, writeJsonReport } from "./reporter.js";
+import { printResult, printSummary, writeJsonReport, openLogFile } from "./reporter.js";
 
 function loadGatewayConfig(): { url: string; token: string } | null {
   // Search common openclaw config locations
@@ -40,6 +40,8 @@ program
   .option("--token <string>", "Gateway auth token")
   .option("--timeout <ms>", "Default timeout per test (ms)", "120000")
   .option("--json", "Write JSON report to results/")
+  .option("--log <path>", "Append per-test log lines to this file as the run progresses (default: results/run-<timestamp>.log)")
+  .option("--no-log", "Disable per-test log file")
   .option("--config <path>", "Path to openclaw.json (auto-detected if omitted)")
   .parse();
 
@@ -88,6 +90,12 @@ try {
 } catch (err) {
   console.error(chalk.red(`Failed to load tests: ${err}`));
   process.exit(1);
+}
+
+// Open log file before printing test progress so the open line shows up first
+if (opts.log !== false) {
+  const logPath = (opts.log as string | undefined) ?? `results/run-${Date.now()}.log`;
+  openLogFile(logPath);
 }
 
 console.log(`Running ${tests.length} tests...\n`);
