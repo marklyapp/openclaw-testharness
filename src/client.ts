@@ -153,13 +153,24 @@ export class TestClient {
         if (!runId && payload.sessionKey !== sessionKey) return;
         if (!runId) runId = payload.runId;
 
+        // OpenClaw's gateway sends each delta event with the FULL
+        // message-so-far, not an incremental chunk, and the final event
+        // contains the complete assembled message. Appending all of them
+        // duplicates text — short responses come back as "aa" / "55" /
+        // "((b)(b)" etc. Use whichever is longer instead of appending,
+        // which handles both cumulative and incremental delta styles.
         if (payload.state === "delta") {
-          responseText += extractText(payload.message);
+          const t = extractText(payload.message);
+          if (process.env.OPENCLAW_TH_DEBUG) console.error(`[DELTA seq=${payload.seq} len=${t.length}] ${JSON.stringify(t.slice(0, 80))}`);
+          if (t.length > responseText.length) responseText = t;
         } else if (payload.state === "final") {
-          responseText += extractText(payload.message);
+          const t = extractText(payload.message);
+          if (process.env.OPENCLAW_TH_DEBUG) console.error(`[FINAL seq=${payload.seq} len=${t.length} acc=${responseText.length}] ${JSON.stringify(t.slice(0, 80))}`);
+          if (t.length > responseText.length) responseText = t;
           settle(responseText);
         } else if (payload.state === "aborted") {
-          responseText += extractText(payload.message);
+          const t = extractText(payload.message);
+          if (t.length > responseText.length) responseText = t;
           settle(responseText);
         } else if (payload.state === "error") {
           settleError(payload.errorMessage || "agent error");
